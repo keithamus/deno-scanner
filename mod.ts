@@ -1,12 +1,12 @@
 export {
-  Scanner,
-  Token,
-  scanWhitespace,
+  defaultTokens,
+  scanComments,
+  scanFloats,
   scanIdents,
   scanInts,
-  scanFloats,
+  Scanner,
   scanStrings,
-  scanComments,
-  defaultTokens,
+  scanWhitespace,
+  Token,
 } from "./scanner.ts";
-export { TokenError, nextTokenIs } from "./helpers.ts";
+export { nextTokenIs, TokenError } from "./helpers.ts";

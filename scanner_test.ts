@@ -1,17 +1,15 @@
-import {
-  assertEquals,
-} from "https://deno.land/std@0.74.0/testing/asserts.ts";
+import { assertEquals } from "https://deno.land/std@0.74.0/testing/asserts.ts";
 import { StringReader } from "https://deno.land/std@0.74.0/io/readers.ts";
 import {
-  Scanner,
-  Token,
-  scanWhitespace,
+  defaultTokens,
+  scanComments,
+  scanFloats,
   scanIdents,
   scanInts,
-  scanFloats,
+  Scanner,
   scanStrings,
-  scanComments,
-  defaultTokens,
+  scanWhitespace,
+  Token,
 } from "./scanner.ts";
 
 type ScanReturn = [Token, string, number, number, number, number];
@@ -27,7 +25,7 @@ async function assertTokens(
     options,
   );
   for await (const token of scanner) {
-    assertEquals(scanner.currentToken, token)
+    assertEquals(scanner.currentToken, token);
     actual.push(
       [token, scanner.contents, ...scanner.startPos, ...scanner.endPos],
     );

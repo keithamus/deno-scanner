@@ -299,7 +299,7 @@ export class Scanner {
       // EOF does not advance the column, so roll it back
       this.#column -= 1;
       this.startPos = [this.#line, this.#column];
-      return this.currentToken = Token.eof
+      return this.currentToken = Token.eof;
     }
     if (this.isWhitespace(ch)) {
       this.contents = ch;
@@ -318,7 +318,9 @@ export class Scanner {
         this.contents += await this.next();
       }
       if (!(this.mode & scanIdents)) return this.scan();
-      return this.currentToken = this.isKeyword(this.contents) ? Token.keyword : Token.identifier;
+      return this.currentToken = this.isKeyword(this.contents)
+        ? Token.keyword
+        : Token.identifier;
     } else if (this.isStringDelimiter(ch)) {
       const delim = this.contents = ch;
       while (true) {
