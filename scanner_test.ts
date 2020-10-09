@@ -1,7 +1,7 @@
 import {
   assertEquals,
-} from "https://deno.land/std@0.64.0/testing/asserts.ts";
-import { StringReader } from "https://deno.land/std@0.64.0/io/readers.ts";
+} from "https://deno.land/std@0.74.0/testing/asserts.ts";
+import { StringReader } from "https://deno.land/std@0.74.0/io/readers.ts";
 import {
   Scanner,
   Token,
