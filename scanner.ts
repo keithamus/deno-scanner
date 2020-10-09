@@ -225,6 +225,7 @@ export class Scanner {
   #column = 0;
 
   public contents = "";
+  public currentToken: Token | null = null;
 
   public startPos: [number, number] = [0, 0];
   get endPos(): [number, number] {
@@ -298,7 +299,7 @@ export class Scanner {
       // EOF does not advance the column, so roll it back
       this.#column -= 1;
       this.startPos = [this.#line, this.#column];
-      return Token.eof;
+      return this.currentToken = Token.eof
     }
     if (this.isWhitespace(ch)) {
       this.contents = ch;
@@ -308,7 +309,7 @@ export class Scanner {
         this.contents += await this.next();
       }
       if (!(this.mode & scanWhitespace)) return this.scan();
-      return Token.whitespace;
+      return this.currentToken = Token.whitespace;
     } else if (this.isIdent(ch, 0)) {
       this.contents = ch;
       for (let i = 1; true; i += 1) {
@@ -317,7 +318,7 @@ export class Scanner {
         this.contents += await this.next();
       }
       if (!(this.mode & scanIdents)) return this.scan();
-      return this.isKeyword(this.contents) ? Token.keyword : Token.identifier;
+      return this.currentToken = this.isKeyword(this.contents) ? Token.keyword : Token.identifier;
     } else if (this.isStringDelimiter(ch)) {
       const delim = this.contents = ch;
       while (true) {
@@ -333,7 +334,7 @@ export class Scanner {
         if (ch === delim) break;
       }
       if (!(this.mode & scanStrings)) return this.scan();
-      return Token.string;
+      return this.currentToken = Token.string;
     } else if (
       this.isDecimal(ch) || this.isSign(ch) ||
       (ch === "." && peek && this.isDecimal(peek))
@@ -394,9 +395,9 @@ export class Scanner {
         }
       }
       if (this.contents.length === 1 && this.isSign(this.contents)) {
-        return Token.token;
+        return this.currentToken = Token.token;
       }
-      return isFloat ? Token.float : Token.int;
+      return this.currentToken = isFloat ? Token.float : Token.int;
     } else if (this.isComment(ch, 0) || this.isBlockCommentOpen(ch, 0)) {
       this.contents = ch;
       let blockComment = peek && this.isBlockCommentOpen(ch, 0) &&
@@ -418,14 +419,14 @@ export class Scanner {
         }
       }
       if (!(this.mode & scanComments)) return this.scan();
-      return Token.comment;
+      return this.currentToken = Token.comment;
     }
     if (!ch) {
       this.contents = "";
-      return Token.eof;
+      return this.currentToken = Token.eof;
     }
     this.contents = ch;
-    return Token.token;
+    return this.currentToken = Token.token;
   }
 
   async *[Symbol.asyncIterator](): AsyncIterator<Token> {

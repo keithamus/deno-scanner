@@ -27,6 +27,7 @@ async function assertTokens(
     options,
   );
   for await (const token of scanner) {
+    assertEquals(scanner.currentToken, token)
     actual.push(
       [token, scanner.contents, ...scanner.startPos, ...scanner.endPos],
     );
